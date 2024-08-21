@@ -19,3 +19,8 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
+//console.log("Firebase app initialized:", app);
+//console.log("Auth service initialized:", auth);
+//console.log("Firestore service initialized:", db);
+//console.log("Storage service initialized:", storage);
