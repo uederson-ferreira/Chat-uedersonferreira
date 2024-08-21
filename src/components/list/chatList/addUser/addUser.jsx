@@ -4,7 +4,6 @@ import {
   arrayUnion,
   collection,
   doc,
-  getDoc,
   getDocs,
   query,
   serverTimestamp,
@@ -34,13 +33,18 @@ const AddUser = () => {
 
       if (!querySnapShot.empty) {
         setUser(querySnapShot.docs[0].data());
+      } else {
+        alert("User not found");
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      alert("Failed to search user. Please try again.");
     }
   };
 
   const handleAdd = async () => {
+    if (!user) return;
+
     const chatRef = collection(db, "chats");
     const userChatsRef = collection(db, "userchats");
 
@@ -57,7 +61,7 @@ const AddUser = () => {
           chatId: newChatRef.id,
           lastMessage: "",
           receiverId: currentUser.id,
-          updatedAt: Date.now(),
+          updatedAt: serverTimestamp(),
         }),
       });
 
@@ -66,11 +70,14 @@ const AddUser = () => {
           chatId: newChatRef.id,
           lastMessage: "",
           receiverId: user.id,
-          updatedAt: Date.now(),
+          updatedAt: serverTimestamp(),
         }),
       });
+
+      alert("User added to chat successfully!");
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      alert("Failed to add user to chat. Please try again.");
     }
   };
 

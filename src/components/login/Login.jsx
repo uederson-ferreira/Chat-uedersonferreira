@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "../../lib/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
 import upload from "../../lib/upload";
 
 const Login = () => {
@@ -26,6 +26,8 @@ const Login = () => {
     }
   };
 
+  //console.log("User Authenticated:", auth.currentUser);
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -35,15 +37,15 @@ const Login = () => {
 
     // VALIDATE INPUTS
     if (!username || !email || !password)
-      return toast.warn("Please enter inputs!");
-    if (!avatar.file) return toast.warn("Please upload an avatar!");
+      return toast.warn("Por Favor insira as informações!");
+    if (!avatar.file) return toast.warn("Por Favor envie uma foto!");
 
     // VALIDATE UNIQUE USERNAME
     const usersRef = collection(db, "users");
     const q = query(usersRef, where("username", "==", username));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
-      return toast.warn("Select another username");
+      return toast.warn("Selecione outro nome de usuário");
     }
 
     try {
@@ -63,7 +65,7 @@ const Login = () => {
         chats: [],
       });
 
-      toast.success("Account created! You can login now!");
+      toast.success("Conta Criada! Você pode acessar agora!");
     } catch (err) {
       console.log(err);
       toast.error(err.message);
@@ -92,20 +94,20 @@ const Login = () => {
   return (
     <div className="login">
       <div className="item">
-        <h2>Welcome back,</h2>
+        <h2>Bem Vindo de Volta,</h2>
         <form onSubmit={handleLogin}>
           <input type="text" placeholder="Email" name="email" />
-          <input type="password" placeholder="Password" name="password" />
-          <button disabled={loading}>{loading ? "Loading" : "Sign In"}</button>
+          <input type="password" placeholder="Senha" name="password" />
+          <button disabled={loading}>{loading ? "Loading" : "Entrar"}</button>
         </form>
       </div>
       <div className="separator"></div>
       <div className="item">
-        <h2>Create an Account</h2>
+        <h2>Criando uma Conta</h2>
         <form onSubmit={handleRegister}>
           <label htmlFor="file">
             <img src={avatar.url || "./avatar.png"} alt="" />
-            Upload an image
+            Envie uma imagem
           </label>
           <input
             type="file"
@@ -113,10 +115,10 @@ const Login = () => {
             style={{ display: "none" }}
             onChange={handleAvatar}
           />
-          <input type="text" placeholder="Username" name="username" />
+          <input type="text" placeholder="Nome de Usuário" name="username" />
           <input type="text" placeholder="Email" name="email" />
-          <input type="password" placeholder="Password" name="password" />
-          <button disabled={loading}>{loading ? "Loading" : "Sign Up"}</button>
+          <input type="password" placeholder="Senha" name="password" />
+          <button disabled={loading}>{loading ? "Loading" : "Cadastrar"}</button>
         </form>
       </div>
     </div>
